@@ -1,5 +1,7 @@
 const canvas = document.getElementById("jsCanvas"),
-    colors = document.getElementsByClassName("jsColor"); // HTMLCollcection
+    colors = document.getElementsByClassName("jsColor"), // HTMLCollcection
+    range = document.getElementById("jsRange"),
+    mode = document.getElementById("jsMode");
 const ctx = canvas.getContext("2d");
 
 /* canvas pixel modifier size 설정 필요*/
@@ -8,7 +10,8 @@ canvas.height = 500;
 ctx.strokeStyle = '#2c2c2c'; // 초기 색깔
 ctx.lineWidth = 2.5; // 초기 line 너비
 
-let painting = false;
+let painting = false,
+    filling = false;
 
 function onMouseMove(event){
     const x = event.offsetX;
@@ -35,7 +38,22 @@ function stopPainting(){
 
 
 function handleColorClick(event){
-    ctx.strokeStyle = event.target.style.backgroundColor;
+    ctx.strokeStyle = event.target.style.backgroundColor; // click이 일어난 태그의 background color
+}
+
+function handleRangeChange(event){
+    ctx.lineWidth = event.target.value; // range 태그가 위치한 곳의 값
+}
+
+function handleModeClick(){
+    if(filling === true){
+        filling = false;
+        mode.innerText = "Fill";
+    }
+    else{
+        filling = true;
+        mode.innerText = "Painting";
+    }
 }
 
 if(canvas){
@@ -48,3 +66,11 @@ if(canvas){
 
 // Array.from() -> Array로 리턴
 Array.from(colors).forEach(color => color.addEventListener("click",handleColorClick));
+
+if(range){
+    range.addEventListener("input",handleRangeChange);
+}
+
+if(mode){
+    mode.addEventListener("click",handleModeClick);
+}
