@@ -1,15 +1,19 @@
 const canvas = document.getElementById("jsCanvas"),
     colors = document.getElementsByClassName("jsColor"), // HTMLCollcection
     range = document.getElementById("jsRange"),
-    mode = document.getElementById("jsMode");
+    mode = document.getElementById("jsMode"),
+    saveBtn = document.getElementById("jsSave");
 const ctx = canvas.getContext("2d");
 const CANVAS_SIZE = 500;
 
 /* canvas pixel modifier size 설정 필요*/
 canvas.width = CANVAS_SIZE;
 canvas.height = CANVAS_SIZE;
-ctx.strokeStyle = '#2c2c2c'; // 초기 색깔
-ctx.fillStyle = '#2c2c2c';
+
+ctx.fillStyle = 'white';
+ctx.fillRect(0,0,canvas.width,canvas.height); // 초기 배경 색깔 -> HTML 배경외에도 canvas에 따로 색깔 설정 필요
+ctx.strokeStyle = '#2c2c2c'; // 초기 글자 색깔
+ctx.fillStyle = '#2c2c2c'; // 초기 채우는 색깔
 ctx.lineWidth = 2.5; // 초기 line 너비
 
 let painting = false,
@@ -67,6 +71,20 @@ function handleCanvasClick(){
     }
 }
 
+/* 우클릭 방지 */
+function handleCM(event){
+    event.preventDefault();
+}
+
+function handleSaveClick(){
+    const image = canvas.toDataURL("image/jpeg"); // 현재 canvas의 이미지 정보를 url로 리턴
+    const link = document.createElement("a");
+    link.href = image // 브라우저에게 링크로 가는대신 url을 다운로드해라
+    link.download = "paintJS"; // 생성 이미지 이름
+    console.log(link);
+    link.click();
+}
+
 if(canvas){
     /* 동시에 실행가능 */
     canvas.addEventListener("mousemove",onMouseMove); // 마우스가 움직임
@@ -74,6 +92,7 @@ if(canvas){
     canvas.addEventListener("mouseup",stopPainting);
     canvas.addEventListener("mouseleave",stopPainting);
     canvas.addEventListener("click",handleCanvasClick);
+    canvas.addEventListener("contextmenu",handleCM);
 }
 
 // Array.from() -> Array로 리턴
@@ -85,4 +104,8 @@ if(range){
 
 if(mode){
     mode.addEventListener("click",handleModeClick);
+}
+
+if(saveBtn){
+    saveBtn.addEventListener("click",handleSaveClick);
 }
