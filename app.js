@@ -3,11 +3,13 @@ const canvas = document.getElementById("jsCanvas"),
     range = document.getElementById("jsRange"),
     mode = document.getElementById("jsMode");
 const ctx = canvas.getContext("2d");
+const CANVAS_SIZE = 500;
 
 /* canvas pixel modifier size 설정 필요*/
-canvas.width = 500;
-canvas.height = 500;
+canvas.width = CANVAS_SIZE;
+canvas.height = CANVAS_SIZE;
 ctx.strokeStyle = '#2c2c2c'; // 초기 색깔
+ctx.fillStyle = '#2c2c2c';
 ctx.lineWidth = 2.5; // 초기 line 너비
 
 let painting = false,
@@ -39,6 +41,7 @@ function stopPainting(){
 
 function handleColorClick(event){
     ctx.strokeStyle = event.target.style.backgroundColor; // click이 일어난 태그의 background color
+    ctx.fillStyle = ctx.strokeStyle; // 채우는 색깔도 선택한 색깔로 미리 설정
 }
 
 function handleRangeChange(event){
@@ -52,7 +55,15 @@ function handleModeClick(){
     }
     else{
         filling = true;
-        mode.innerText = "Painting";
+        mode.innerText = "Paint";
+        
+
+    }
+}
+
+function handleCanvasClick(){
+    if(filling){
+        ctx.fillRect(0,0,canvas.width,canvas.height); // 현재 fillStyle로 영역을 채움
     }
 }
 
@@ -62,6 +73,7 @@ if(canvas){
     canvas.addEventListener("mousedown",startPainting); // click
     canvas.addEventListener("mouseup",stopPainting);
     canvas.addEventListener("mouseleave",stopPainting);
+    canvas.addEventListener("click",handleCanvasClick);
 }
 
 // Array.from() -> Array로 리턴
